@@ -1,0 +1,22 @@
+welcome
+Operation code error	IC: 3	IR: LD30	TTL: 4	TLL: 1	TTC: 4	LLC: 1	
+
+--------------------------------------------
+Page fault error	IC: 1	IR: PD20	TTL: 4	TLL: 1	TTC: 1	LLC: 1	
+
+--------------------------------------------
+welcome
+Write operation done and Time Limit exceeded 	IC: 2	IR: PD10	TTL: 2	TLL: 1	TTC: 3	LLC: 1	
+
+--------------------------------------------
+Line limit exceeded	IC: 2	IR: PD10	TTL: 3	TLL: 0	TTC: 3	LLC: 1	
+
+--------------------------------------------
+welcome
+No error
+	IC: 3	IR: H	TTL: 3	TLL: 1	TTC: 4	LLC: 1	
+
+--------------------------------------------
+Operand error	IC: 1	IR: GD1A	TTL: 3	TLL: 1	TTC: 2	LLC: 0	
+
+--------------------------------------------

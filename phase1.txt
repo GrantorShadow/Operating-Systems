@@ -1,0 +1,392 @@
+﻿#include<stdio.h>
+#include<iostream>
+#include<string.h>
+#include<stdlib.h>
+
+using namespace std;
+
+void user_prog();
+void MOS(char IR[]);
+void read(char IR[]);
+void write(char IR[]);
+void lr(char IR[]);
+void sr(char IR[]);
+void cr(char IR[]);
+void bt(char IR[]);
+void termin();
+void startexec();
+
+char buffer[40];
+char M[100][4],R[4],IR[4];
+
+int flag=0;
+int IC;
+int SI;
+int c;
+int countn,mi=0,r,n;
+FILE *f1, *fp1;
+
+
+
+
+void load()
+{
+    int i=0,j=0,k=0;
+
+    f1=fopen("Phase1.txt","r");
+    printf("hi");
+
+    char c=fgetc(f1);
+
+    while(c!=EOF)
+    {
+        while ((c!='\n')&&(c!=EOF))
+        {
+           buffer[i]=c;
+           c=fgetc(f1);
+           printf("\n hi buff[%d]=%c",i,buffer[i]);
+           i++;
+           //printf("%d",i);
+        }
+        buffer[i] = '\0';
+
+         if(buffer[0]=='$' && buffer[1]=='A' && buffer[2]=='M' && buffer[3]=='J')
+        {
+            i=0;
+            printf("\nnew \n");
+            c=fgetc(f1);
+            //init();
+            while((c!='H')&&(c!=EOF))
+           {
+                if(c!='\n')
+                {
+                    buffer[i] = c;
+                    i++;
+                }
+
+                c=fgetc(f1);
+                printf("\n hello buff[%d]=%c",i,buffer[i]);
+
+           }
+           buffer[i]='H';
+           printf("\n check buff[%d]=%c",i,buffer[i]);
+           printf("\ni=%d",i);
+           i=0;
+           for(mi=0;buffer[i]!='H';mi++)
+           {
+            for(j=0;j<4;j++)
+            {
+              M[mi][j]=buffer[i];//load instruction
+              printf("\n hhhhh M[%d][%d]=%c",mi,j,M[mi][j]);
+              i++;
+            }
+            M[mi][j] = '\0';
+           }
+          M[mi][0]='H';
+          M[mi][1] = '\0';
+          printf("\nmem[%d][0]=%c",0,M[0][0]);
+
+
+
+            i=0;
+            r=mi; // last instruction
+            mi++;
+            c=fgetc(f1);
+        }
+
+        else if(buffer[0]=='$' && buffer[1]=='D' && buffer[2]=='T' && buffer[3]=='A' )
+        {
+
+            i=0;
+
+            printf("check100 M[0][0]:%c",M[0][0]);
+
+            startexec();
+
+            i=0;
+
+        }
+
+        else if(buffer[0]=='$' && buffer[1]=='E' && buffer[2]=='N' && buffer[3]=='D')
+        {
+            i=0;
+
+            printf("\n$ End successfully executed.");
+
+
+            //break;
+        }
+        else
+        {
+            c=fgetc(f1);
+        }
+    }
+
+}
+
+void startexec()
+{
+      //cout<<"In startexec";
+      IC=0;
+
+      user_prog();
+}
+
+void user_prog()
+{
+    int i,p,q,e;
+    //printf("r:%d",r);        //r = 4
+    for(p=0;p<=r;p++)
+    {
+        for(q=0;q<4;q++)
+        {
+             if(c==1 && IR[0]=='B'&&IR[1]=='T' && flag == 1)
+             {
+                 printf("\n---------------obama--------------\n");
+                 p = IC;
+                 IR[q] = M[p][q];
+             }
+             else
+             {
+                 IR[q]=M[p][q];
+             }
+             printf("\n qwerty IR[%d]=%c  M[%d][%d]=%c",q,IR[q], p, q, M[p][q]);
+             printf("%c",IR[q]);
+        }
+
+        IR[q] = '\0';
+        printf("\nIR[0][1][2][3]=%c%c%c%c",IR[0],IR[1],IR[2],IR[3]);
+
+        if((IR[0]=='G')&&(IR[1]=='D'))
+        {
+            printf(" abchi");
+            SI=1;
+            MOS(IR);
+        }
+
+         else if((IR[0]=='P')&&(IR[1]=='D'))
+        {
+            printf("\nwrite ready");
+            SI=2;
+            MOS(IR);
+        }
+
+        else if(IR[0]=='H')
+        {
+           SI=3;
+           MOS(IR);
+        }
+
+        else if(IR[0]=='L'&&IR[1]=='R')
+        {
+            lr(IR);
+        }
+
+        else if(IR[0]=='S'&&IR[1]=='R')
+        {
+            printf("\nCall to store the register contents Instruction:\n");
+            sr(IR);
+            //printf("\nSR");
+        }
+
+        else if(IR[0]=='C'&&IR[1]=='R')
+        {
+            printf("\nCall to Compare the contents Instruction:\n");
+            cr(IR);
+        }
+        else if(IR[0]=='B'&&IR[1]=='T')
+        {
+            printf("\nCall to Branch Instruction:\n");
+            bt(IR);
+        }
+
+    }
+}
+
+void MOS(char IR[])
+{
+    //printf("\nRead Successfully5");
+     if(SI==1)
+     {
+         read(IR);
+         printf("data read");
+     }
+
+
+     else if(SI==2)
+     {
+         write(IR);
+     }
+
+
+     else
+        termin();
+
+
+}
+
+void termin()
+{
+	printf("\nTerminates successfully");
+	fputc('\n',fp1);
+	fputc('\n',fp1);
+
+}
+
+void write(char IR[])
+{
+    int l,j,ci=0,d=0;
+    //FILE *fp1 ;
+    l=IR[2]-'0';
+    l=l*10;
+    printf("l:%d",l);
+     //fp1=fopen("w.txt","a+");
+
+    while(ci!=40)
+  {
+      for(j=0;j<4;j++)
+      {
+         ci++;
+         fputc(M[l][j],fp1);
+      }
+
+      l++;
+  }
+  fputc('\n',fp1);
+  //fclose(fp1);
+  printf("\nwrite successfully");
+
+}
+
+void read(char IR[])
+{
+    int i,countn,buffcount,q,l=0,m=0,c=0,p,k,j;
+
+    cout<<"in read";
+
+    char ch;
+
+    ch = fgetc(f1);
+
+    printf("%c",ch);
+
+    i = 0;
+    while(ch!='\n')
+    {
+        buffer[i]=ch;
+        printf("\nbuff[%d]=%c",i,buffer[i]);
+        ch=fgetc(f1);
+        i++;
+        c++;
+    }
+    buffer[i] = '\0';
+
+    n=i;
+    p=0;
+    mi=IR[2]-'0';
+    mi=mi*10;
+    printf("\n mi:%d",mi);
+
+    for(k=mi;buffer[p]!='\0';mi++)
+  {
+    for(j=0;j<4 && buffer[p] != '\0';j++)
+    {
+      M[k][j]=buffer[p]; //load string
+      printf("\nmem[%d][%d]=%c",k,j,M[k][j]);
+      p++;
+    }
+    k++;
+    printf("\nRead Successfully");
+  }
+}
+
+void lr(char IR[])
+{
+ int i,k,j,n=0;
+ i=IR[2]-'0';
+ i=i*10;
+ j=IR[3]-'0';
+ i=i+j;
+ printf("i(lr):%d",i);
+ for(k=0;k<4;k++)
+  {
+   R[n]=M[i][k];
+   n++;
+  }
+  printf("\n Register content: R[0][1][2][3]:%c%c%c%c",R[0],R[1],R[2],R[3]);
+}
+
+void sr(char IR[])
+{
+     int i,j,k,n=0;
+     i=IR[2]-'0';
+     i=i*10;
+     j=IR[3]-'0';
+     i=i+j;
+     //printf("\ni=%d",i);
+     //printf("\nj=%d",j);
+     for(k=0;k<4;k++)
+     {
+         M[i][k]=R[n];
+         n++;
+     }
+     printf("\nContents of Memory are\nM[0][1][2][3]:%c%c%c%c\n",M[i][0],M[i][1],M[i][2],M[i][3]);
+}
+
+void cr(char IR[])
+{
+     int i,j,k;
+     i=IR[2]-'0';
+     i=i*10;
+     j=IR[3]-'0';
+     i=i+j;
+     if((R[0]==M[i][0])&&(R[1]==M[i][1])&&(R[2]==M[i][2])&&(R[3]==M[i][3]))
+       c=1;
+     else
+       c=0;
+      printf("\n\nAfter Comparing the register and memory contents the value of register C is : %d \n",c);
+
+}
+
+void bt(char IR[])
+{
+     int i,j;
+     i=IR[2]-'0';
+     i=i*10;
+     j=IR[3]-'0';
+     i=i+j;
+     if(c==1)
+     {
+          IC=i;
+          printf("\n------------DONALD TRUMP---------------IC:%d\n",IC);
+          SI=-1;
+     }
+     else
+      {
+          SI=0;
+      }
+      flag = 1;
+}
+
+
+int main()
+{
+
+    int i,k,j;
+
+    fp1=fopen("w.txt","w");
+
+    load();
+
+    fclose(fp1);
+    strcpy(IR,"\0");
+    strcpy(R,"\0");
+    for(i = 0;i < 100;i++)
+    {
+        strcpy(M[i],"\0");
+    }
+    strcpy(buffer,"\0");
+
+    return 0;
+
+}
